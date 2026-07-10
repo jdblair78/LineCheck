@@ -7,7 +7,7 @@ export default function DashboardHeader() {
     <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
       <div>
         <p className="text-sm font-medium">
-          Penn Station
+          My Restaurant
         </p>
 
         <p className="text-xs text-muted-foreground">
