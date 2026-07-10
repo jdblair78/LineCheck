@@ -8,7 +8,7 @@ import {
   dashboardMetrics,
   recentActivity,
   todaysChecks,
-  weeklyComplianceData,
+  getWeeklyComplianceData,
 } from "@/lib/constants/dashboard-data";
 
 export default function DashboardPage() {
@@ -68,7 +68,7 @@ export default function DashboardPage() {
           </p>
 
           <div className="mt-6">
-            <ComplianceChart data={weeklyComplianceData} />
+            <ComplianceChart data={getWeeklyComplianceData()} />
           </div>
         </article>
 

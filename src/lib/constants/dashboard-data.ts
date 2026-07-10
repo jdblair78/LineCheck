@@ -64,15 +64,22 @@ export const todaysChecks = [
   },
 ];
 
-export const weeklyComplianceData = [
-  { day: "Mon", compliance: 82 },
-  { day: "Tue", compliance: 94 },
-  { day: "Wed", compliance: 100 },
-  { day: "Thu", compliance: 88 },
-  { day: "Fri", compliance: 96 },
-  { day: "Sat", compliance: 72 },
-  { day: "Sun", compliance: 90 },
-];
+export function getWeeklyComplianceData() {
+  const today = new Date();
+
+  const complianceValues = [82, 94, 100, 88, 96, 72, 90];
+
+  return complianceValues.map((value, index) => {
+    const date = new Date(today);
+
+    date.setDate(today.getDate() - (6 - index));
+
+    return {
+      date: `${date.getMonth() + 1}/${date.getDate()}`,
+      compliance: value,
+    };
+  });
+}
 
 export const recentActivity = [
   {

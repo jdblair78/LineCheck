@@ -28,7 +28,7 @@ export default function EquipmentAlert() {
                 </p>
               </div>
 
-              <span className="w-fit rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive">
+              <span className="inline-flex w-fit items-center justify-center rounded-full bg-destructive/10 px-2.5 py-1 text-center text-xs font-medium leading-none text-destructive">
                 High priority
               </span>
             </div>

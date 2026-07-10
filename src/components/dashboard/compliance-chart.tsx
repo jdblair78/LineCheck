@@ -11,7 +11,7 @@ import {
 } from "recharts";
 
 type ComplianceDataPoint = {
-  day: string;
+  date: string;
   compliance: number;
 };
 
@@ -19,9 +19,7 @@ type ComplianceChartProps = {
   data: ComplianceDataPoint[];
 };
 
-export default function ComplianceChart({
-  data,
-}: ComplianceChartProps) {
+export default function ComplianceChart({ data }: ComplianceChartProps) {
   return (
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -30,7 +28,7 @@ export default function ComplianceChart({
           margin={{
             top: 10,
             right: 10,
-            left: -20,
+            left: 10,
             bottom: 0,
           }}
         >
@@ -40,23 +38,30 @@ export default function ComplianceChart({
             className="stroke-border"
           />
 
-          <XAxis
-            dataKey="day"
-            tickLine={false}
-            axisLine={false}
-            className="text-xs"
+          <XAxis 
+          dataKey="date"
+          tickLine={false}
+          axisLine={false}
           />
 
           <YAxis
             domain={[0, 100]}
+            ticks={[0, 20, 40, 60, 80, 100]}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(value) => `${value}%`}
-            className="text-xs"
+            tickFormatter={(value: number) => `${value}%`}
+            width={45}
           />
 
           <Tooltip
-            formatter={(value) => [`${value}%`, "Compliance"]}
+            formatter={(value) => {
+              const numericValue = Number(value);
+
+              return [
+                `${Number.isNaN(numericValue) ? 0 : Math.round(numericValue)}%`,
+                "Compliance",
+              ];
+            }}
             contentStyle={{
               borderRadius: "12px",
               border: "1px solid var(--border)",
