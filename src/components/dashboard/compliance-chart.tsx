@@ -38,20 +38,28 @@ export default function ComplianceChart({ data }: ComplianceChartProps) {
             className="stroke-border"
           />
 
-          <XAxis 
-          dataKey="date"
-          tickLine={false}
-          axisLine={false}
-          />
+          <XAxis
+  dataKey="date"
+  tickLine={false}
+  axisLine={false}
+  tick={{
+    fill: "var(--muted-foreground)",
+    fontSize: 12,
+  }}
+/>
 
-          <YAxis
-            domain={[0, 100]}
-            ticks={[0, 20, 40, 60, 80, 100]}
-            tickLine={false}
-            axisLine={false}
-            tickFormatter={(value: number) => `${value}%`}
-            width={45}
-          />
+<YAxis
+  domain={[0, 100]}
+  ticks={[0, 20, 40, 60, 80, 100]}
+  tickLine={false}
+  axisLine={false}
+  tickFormatter={(value: number) => `${value}%`}
+  width={50}
+  tick={{
+    fill: "var(--muted-foreground)",
+    fontSize: 12,
+  }}
+/>
 
           <Tooltip
             formatter={(value) => {

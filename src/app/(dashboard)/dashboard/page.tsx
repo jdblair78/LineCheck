@@ -12,12 +12,18 @@ import {
 } from "@/lib/constants/dashboard-data";
 
 export default function DashboardPage() {
+  const todayLabel = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(new Date());
+
   return (
     <div className="space-y-8">
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium text-muted-foreground">
-            Friday, July 10
+            {todayLabel}
           </p>
 
           <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">

@@ -2,16 +2,24 @@ import { Bell, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
+import ThemeToggle from "@/components/layout/theme-toggle";
+
+import MobileNavigation from "@/components/layout/mobile-navigation";
+
 export default function DashboardHeader() {
   return (
     <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
+      <div className="flex items-center gap-3 lg:hidden">
+        <MobileNavigation />
+      </div>
+      
       <div>
         <p className="text-sm font-medium">
-          My Restaurant
+          Your Restaurant
         </p>
 
         <p className="text-xs text-muted-foreground">
-          Louisville, Kentucky
+          Your Location
         </p>
       </div>
 
@@ -23,6 +31,8 @@ export default function DashboardHeader() {
         >
           <Search className="size-5" />
         </Button>
+
+        <ThemeToggle />
 
         <Button
           variant="ghost"
