@@ -23,7 +23,7 @@ export default function DashboardLayout({
         <DashboardHeader />
 
         <main className="flex-1 bg-muted/30 p-4 md:p-6 lg:p-8">
-          <div className="mx-auto w-full max-w-7xl">
+          <div className="mx-auto w-full max-w-360">
             {children}
           </div>
         </main>

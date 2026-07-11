@@ -1,9 +1,9 @@
-import ComplianceChart from "@/components/dashboard/compliance-chart";
+import CompliancePanel from "@/components/dashboard/compliance-panel";
+import DashboardHero from "@/components/dashboard/dashboard-hero";
 import EquipmentAlert from "@/components/dashboard/equipment-alert";
 import MetricCard from "@/components/dashboard/metric-card";
 import RecentActivity from "@/components/dashboard/recent-activity";
 import TodaysChecks from "@/components/dashboard/todays-checks";
-import DashboardHero from "@/components/dashboard/dashboard-hero";
 
 import {
   dashboardMetrics,
@@ -18,19 +18,20 @@ export default function DashboardPage() {
       <DashboardHero />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-  {dashboardMetrics.map((metric) => (
-    <MetricCard
-      key={metric.title}
-      title={metric.title}
-      value={metric.value}
-      description={metric.description}
-      trend={metric.trend}
-      progress={metric.progress}
-      icon={metric.icon}
-      tone={metric.tone}
-    />
-  ))}
-</section>
+        {dashboardMetrics.map((metric, index) => (
+          <MetricCard
+            key={metric.title}
+            title={metric.title}
+            value={metric.value}
+            description={metric.description}
+            trend={metric.trend}
+            progress={metric.progress}
+            icon={metric.icon}
+            tone={metric.tone}
+            featured={index === 0}
+          />
+        ))}
+      </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
         <TodaysChecks checks={todaysChecks} />
@@ -38,20 +39,7 @@ export default function DashboardPage() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <article className="rounded-2xl border bg-card p-6 shadow-sm">
-          <h2 className="text-lg font-semibold">
-            Weekly compliance
-          </h2>
-
-          <p className="mt-1 text-sm text-muted-foreground">
-            Completed checks during the current week.
-          </p>
-
-          <div className="mt-6">
-            <ComplianceChart data={getWeeklyComplianceData()} />
-          </div>
-        </article>
-
+        <CompliancePanel data={getWeeklyComplianceData()} />
         <RecentActivity activities={recentActivity} />
       </section>
     </div>

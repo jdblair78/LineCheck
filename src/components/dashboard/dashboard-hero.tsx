@@ -59,9 +59,7 @@ function getGreeting(date: Date) {
 export default function DashboardHero() {
   const [currentDate] = useState<Date>(() => new Date());
 
-  const greeting = currentDate
-    ? getGreeting(currentDate)
-    : "Welcome back";
+  const greeting = currentDate ? getGreeting(currentDate) : "Welcome back";
 
   const formattedDate = currentDate
     ? new Intl.DateTimeFormat("en-US", {
@@ -75,9 +73,10 @@ export default function DashboardHero() {
   return (
     <section className="overflow-hidden rounded-3xl border bg-card shadow-sm">
       <div className="relative px-6 py-7 md:px-8 md:py-9">
-        <div className="pointer-events-none absolute -right-20 -top-24 size-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-20 size-72 rounded-full bg-primary/20 blur-3xl" />
 
-        <div className="relative flex flex-col justify-between gap-6 xl:flex-row xl:items-start">
+        <div className="pointer-events-none absolute -left-16 bottom-0 size-64 rounded-full bg-success/20 blur-3xl" />
+        <div className="relative grid gap-6 xl:grid-cols-[1fr_420px] xl:items-start">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-muted-foreground">
               {formattedDate}
@@ -89,20 +88,9 @@ export default function DashboardHero() {
             </h1>
 
             <p className="mt-3 max-w-xl text-muted-foreground">
-              Here is today’s food safety, team, and restaurant
-              operations overview.
+              Here is today’s food safety, team, and restaurant operations
+              overview.
             </p>
-          </div>
-
-          <div className="flex w-fit items-center gap-2 rounded-full border bg-background/80 px-4 py-2 text-sm shadow-sm backdrop-blur">
-            <span className="relative flex size-2.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-50" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-success" />
-            </span>
-
-            <span className="font-medium">
-              Restaurant operating normally
-            </span>
           </div>
         </div>
       </div>
@@ -118,18 +106,10 @@ export default function DashboardHero() {
                 "flex items-center gap-4 px-6 py-5 transition-colors hover:bg-muted/40",
                 index > 0 ? "border-t sm:border-t-0" : "",
                 index === 1 ? "sm:border-l" : "",
-                index === 2
-                  ? "xl:border-l"
-                  : "",
-                index === 3
-                  ? "sm:border-l xl:border-l"
-                  : "",
-                index === 2
-                  ? "sm:border-t xl:border-t-0"
-                  : "",
-                index === 3
-                  ? "sm:border-t xl:border-t-0"
-                  : "",
+                index === 2 ? "xl:border-l" : "",
+                index === 3 ? "sm:border-l xl:border-l" : "",
+                index === 2 ? "sm:border-t xl:border-t-0" : "",
+                index === 3 ? "sm:border-t xl:border-t-0" : "",
               ].join(" ")}
             >
               <div
@@ -141,11 +121,12 @@ export default function DashboardHero() {
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground">
-                  {item.label}
-                </p>
+                <p className="text-sm text-muted-foreground">{item.label}</p>
 
-                <p className="mt-0.5 font-semibold">
+                <p
+                  className="mt-0.5 
+                font-semibold"
+                >
                   {item.value}
                 </p>
               </div>

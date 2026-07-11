@@ -27,6 +27,7 @@ type MetricCardProps = {
   trend?: string;
   tone?: MetricTone;
   progress?: number;
+  featured?: boolean;
 };
 
 const metricIcons: Record<MetricIcon, LucideIcon> = {
@@ -47,25 +48,25 @@ const toneStyles: Record<
 > = {
   default: {
     icon: "bg-primary/10 text-primary",
-    glow: "bg-primary/10",
+    glow: "bg-primary/20",
     trend: "text-primary",
     progress: "bg-primary",
   },
   success: {
     icon: "bg-success/10 text-success",
-    glow: "bg-success/10",
+    glow: "bg-success/20",
     trend: "text-success",
     progress: "bg-success",
   },
   warning: {
     icon: "bg-warning/15 text-warning-foreground",
-    glow: "bg-warning/10",
+    glow: "bg-warning/20",
     trend: "text-warning-foreground",
     progress: "bg-warning",
   },
   danger: {
     icon: "bg-destructive/10 text-destructive",
-    glow: "bg-destructive/10",
+    glow: "bg-destructive/20",
     trend: "text-destructive",
     progress: "bg-destructive",
   },
@@ -103,6 +104,7 @@ export default function MetricCard({
   trend,
   tone = "default",
   progress,
+  featured = false,
 }: MetricCardProps) {
   const styles = toneStyles[tone];
   const Icon = metricIcons[icon];
@@ -142,72 +144,91 @@ export default function MetricCard({
 
   return (
     <article
-      className={cn(
-        "group relative overflow-hidden rounded-2xl border bg-card p-5 text-card-foreground",
-        "shadow-sm transition-all duration-300",
-        "hover:-translate-y-1 hover:shadow-lg",
-      )}
-    >
+  className={cn(
+    "group relative overflow-hidden rounded-2xl border bg-card p-5 text-card-foreground",
+    "shadow-sm transition-all duration-300",
+    "hover:-translate-y-1 hover:shadow-lg",
+    featured && "border-primary/30"
+  )}
+>
+  <div
+    className={cn(
+      "pointer-events-none absolute -right-8 -top-10 size-28 rounded-full blur-3xl",
+      "opacity-0 transition-opacity duration-300 group-hover:opacity-35",
+      styles.progress
+    )}
+  />
+
+  <div className="relative">
+    <div className="flex items-start justify-between gap-4">
+      <div>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-muted-foreground">
+            {title}
+          </p>
+
+          {featured && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+              Today
+            </span>
+          )}
+        </div>
+
+        <p className="mt-3 text-3xl font-bold tracking-tight">
+          {displayedValue}
+        </p>
+      </div>
+
       <div
         className={cn(
-          "pointer-events-none absolute -right-8 -top-10 size-28 rounded-full blur-3xl transition-opacity duration-300",
-          styles.glow,
-          "opacity-50 group-hover:opacity-100",
+          "flex size-11 shrink-0 items-center justify-center rounded-2xl shadow-sm",
+          "transition-transform duration-300 group-hover:scale-110",
+          styles.icon
         )}
-      />
+      >
+        <Icon className="size-5" />
+      </div>
+    </div>
 
-      <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+    <div className="mt-4 flex min-h-5 items-center gap-2 text-sm">
+      {trend && (
+        <span className={cn("font-semibold", styles.trend)}>
+          {trend}
+        </span>
+      )}
 
-            <p className="mt-3 text-3xl font-bold tracking-tight">
-              {displayedValue}
-            </p>
-          </div>
+      <span className="text-muted-foreground">
+        {description}
+      </span>
+    </div>
 
+    {typeof progress === "number" && (
+      <div className="mt-5">
+        <div className="mb-2 flex items-center justify-between text-xs">
+          <span className="text-muted-foreground">
+            Progress
+          </span>
+
+          <span className="font-medium">
+            {progress}%
+          </span>
+        </div>
+
+        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
           <div
             className={cn(
-              "flex size-11 items-center justify-center rounded-2xl",
-              "shadow-sm transition-transform duration-300",
-              "group-hover:scale-110",
-              styles.icon,
+              "h-full rounded-full transition-all duration-700 ease-out",
+              "group-hover:brightness-110",
+              styles.progress
             )}
-          >
-            <Icon className="size-5" />
-          </div>
+            style={{
+              width: `${Math.min(Math.max(progress, 0), 100)}%`,
+            }}
+          />
         </div>
-
-        <div className="mt-4 flex min-h-5 items-center gap-2 text-sm">
-          {trend && (
-            <span className={cn("font-semibold", styles.trend)}>{trend}</span>
-          )}
-
-          <span className="text-muted-foreground">{description}</span>
-        </div>
-
-        {typeof progress === "number" && (
-          <div className="mt-5">
-            <div className="mb-2 flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Progress</span>
-
-              <span className="font-medium">{progress}%</span>
-            </div>
-
-            <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-[width] duration-700 ease-out",
-                  styles.progress,
-                )}
-                style={{
-                  width: `${Math.min(Math.max(progress, 0), 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-        )}
       </div>
-    </article>
+    )}
+  </div>
+</article>
   );
 }
