@@ -39,27 +39,27 @@ export default function ComplianceChart({ data }: ComplianceChartProps) {
           />
 
           <XAxis
-  dataKey="date"
-  tickLine={false}
-  axisLine={false}
-  tick={{
-    fill: "var(--muted-foreground)",
-    fontSize: 12,
-  }}
-/>
+            dataKey="date"
+            tickLine={false}
+            axisLine={false}
+            tick={{
+              fill: "var(--muted-foreground)",
+              fontSize: 12,
+            }}
+          />
 
-<YAxis
-  domain={[0, 100]}
-  ticks={[0, 20, 40, 60, 80, 100]}
-  tickLine={false}
-  axisLine={false}
-  tickFormatter={(value: number) => `${value}%`}
-  width={50}
-  tick={{
-    fill: "var(--muted-foreground)",
-    fontSize: 12,
-  }}
-/>
+          <YAxis
+            domain={[0, 100]}
+            ticks={[0, 20, 40, 60, 80, 100]}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value: number) => `${value}%`}
+            width={50}
+            tick={{
+              fill: "var(--muted-foreground)",
+              fontSize: 12,
+            }}
+          />
 
           <Tooltip
             formatter={(value) => {
@@ -83,13 +83,17 @@ export default function ComplianceChart({ data }: ComplianceChartProps) {
             dataKey="compliance"
             stroke="var(--primary)"
             strokeWidth={3}
+            isAnimationActive
+            animationDuration={900}
             dot={{
               r: 4,
               fill: "var(--card)",
+              stroke: "var(--primary)",
               strokeWidth: 2,
             }}
             activeDot={{
               r: 6,
+              fill: "var(--primary)",
             }}
           />
         </LineChart>

@@ -13,29 +13,24 @@ import {
 } from "@/lib/constants/dashboard-data";
 
 export default function DashboardPage() {
-  const todayLabel = new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(new Date());
-
   return (
     <div className="space-y-6 lg:space-y-8">
       <DashboardHero />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {dashboardMetrics.map((metric) => (
-          <MetricCard
-            key={metric.title}
-            title={metric.title}
-            value={metric.value}
-            description={metric.description}
-            trend={metric.trend}
-            icon={metric.icon}
-            tone={metric.tone}
-          />
-        ))}
-      </section>
+  {dashboardMetrics.map((metric) => (
+    <MetricCard
+      key={metric.title}
+      title={metric.title}
+      value={metric.value}
+      description={metric.description}
+      trend={metric.trend}
+      progress={metric.progress}
+      icon={metric.icon}
+      tone={metric.tone}
+    />
+  ))}
+</section>
 
       <section className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
         <TodaysChecks checks={todaysChecks} />

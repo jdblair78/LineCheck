@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AlertTriangle,
   CalendarDays,
@@ -57,11 +57,7 @@ function getGreeting(date: Date) {
 }
 
 export default function DashboardHero() {
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setCurrentDate(new Date());
-  }, []);
+  const [currentDate] = useState<Date>(() => new Date());
 
   const greeting = currentDate
     ? getGreeting(currentDate)

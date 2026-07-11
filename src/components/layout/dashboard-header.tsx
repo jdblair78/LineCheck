@@ -6,7 +6,7 @@ import ThemeToggle from "@/components/layout/theme-toggle";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-import MobileNavigation from "@/components/layout/mobile-navigation";
+import ProfileMenu from "@/components/layout/profile-menu";
 
 export default function DashboardHeader() {
   return (
@@ -49,13 +49,7 @@ export default function DashboardHeader() {
           <span className="absolute right-2 top-2 size-2 rounded-full bg-destructive" />
         </Button>
 
-        <button
-          type="button"
-          className="ml-1 flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
-          aria-label="Open user menu"
-        >
-          JB
-        </button>
+        <ProfileMenu />
       </div>
     </header>
   );
