@@ -5,6 +5,13 @@ import ThemeProvider from "@/components/theme-provider";
 
 import "./globals.css";
 
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "LineCheck",
   description: "Digital Food Safety Platform",
@@ -19,7 +26,7 @@ export default function RootLayout({
 }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
