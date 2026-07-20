@@ -1,0 +1,194 @@
+warning: in the working copy of 'src/app/globals.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/ui/button.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/ui/input.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/app/(auth)/login/page.tsx b/src/app/(auth)/login/page.tsx[m
+[1mindex da998dc..363247a 100644[m
+[1m--- a/src/app/(auth)/login/page.tsx[m
+[1m+++ b/src/app/(auth)/login/page.tsx[m
+[36m@@ -3,30 +3,71 @@[m
+ import Link from "next/link";[m
+ import { FormEvent, useState } from "react";[m
+ import { useRouter } from "next/navigation";[m
+[32m+[m
+ import { createClient } from "@/lib/supabase/client";[m
+ [m
+[32m+[m[32mimport { Button } from "@/components/ui/button";[m
+[32m+[m[32mimport { Input } from "@/components/ui/input";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  FormField,[m
+[32m+[m[32m  FormLabel,[m
+[32m+[m[32m  FormMessage,[m
+[32m+[m[32m} from "@/components/ui/form-field";[m
+[32m+[m
+ export default function LoginPage() {[m
+   const router = useRouter();[m
+   const supabase = createClient();[m
+ [m
+   const [email, setEmail] = useState("");[m
+   const [password, setPassword] = useState("");[m
+[31m-  const [showPassword, setShowPassword] = useState(false);[m
+ [m
+   const [errorMessage, setErrorMessage] = useState("");[m
+   const [isSubmitting, setIsSubmitting] = useState(false);[m
+[32m+[m[32m  const [isDemoLoading, setIsDemoLoading] = useState(false);[m
+[32m+[m
+[32m+[m[32m  async function handleDemoLogin() {[m
+[32m+[m[32m    setIsDemoLoading(true);[m
+[32m+[m[32m    setErrorMessage("");[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      const response = await fetch("/api/auth/demo", {[m
+[32m+[m[32m        method: "POST",[m
+[32m+[m[32m      });[m
+[32m+[m
+[32m+[m[32m      const result = await response.json();[m
+ [m
+[31m-  async function handleLogin(event: FormEvent<HTMLFormElement>) {[m
+[32m+[m[32m      if (!response.ok) {[m
+[32m+[m[32m        setErrorMessage([m
+[32m+[m[32m          result.error ?? "Unable to start the demo."[m
+[32m+[m[32m        );[m
+[32m+[m[32m        return;[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      router.replace("/dashboard");[m
+[32m+[m[32m      router.refresh();[m
+[32m+[m[32m    } catch {[m
+[32m+[m[32m      setErrorMessage([m
+[32m+[m[32m        "Something went wrong while starting the demo."[m
+[32m+[m[32m      );[m
+[32m+[m[32m    } finally {[m
+[32m+[m[32m      setIsDemoLoading(false);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  async function handleLogin([m
+[32m+[m[32m    event: FormEvent<HTMLFormElement>[m
+[32m+[m[32m  ) {[m
+     event.preventDefault();[m
+ [m
+     setErrorMessage("");[m
+     setIsSubmitting(true);[m
+ [m
+     try {[m
+[31m-      const { error } = await supabase.auth.signInWithPassword({[m
+[31m-        email: email.trim(),[m
+[31m-        password,[m
+[31m-      });[m
+[32m+[m[32m      const { error } =[m
+[32m+[m[32m        await supabase.auth.signInWithPassword({[m
+[32m+[m[32m          email: email.trim(),[m
+[32m+[m[32m          password,[m
+[32m+[m[32m        });[m
+ [m
+       if (error) {[m
+         setErrorMessage(error.message);[m
+[36m@@ -36,12 +77,17 @@[m [mexport default function LoginPage() {[m
+       router.push("/dashboard");[m
+       router.refresh();[m
+     } catch {[m
+[31m-      setErrorMessage("Something went wrong. Please try again.");[m
+[32m+[m[32m      setErrorMessage([m
+[32m+[m[32m        "Something went wrong. Please try again."[m
+[32m+[m[32m      );[m
+     } finally {[m
+       setIsSubmitting(false);[m
+     }[m
+   }[m
+ [m
+[32m+[m[32m  const hasError = Boolean(errorMessage);[m
+[32m+[m[32m  const isBusy = isSubmitting || isDemoLoading;[m
+[32m+[m
+   return ([m
+     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-10">[m
+       <section className="w-full max-w-md rounded-2xl border bg-background p-6 shadow-sm sm:p-8">[m
+[36m@@ -53,84 +99,90 @@[m [mexport default function LoginPage() {[m
+           <h1 className="text-3xl font-bold tracking-tight">[m
+             Welcome Back[m
+           </h1>[m
+[31m-[m
+[31m-          <p className="mt-2 text-sm text-muted-foreground">[m
+[31m-            Sign in to manage your restaurant operations.[m
+[31m-          </p>[m
+         </div>[m
+ [m
+         <form onSubmit={handleLogin} className="space-y-5">[m
+[31m-          <div className="space-y-2">[m
+[31m-            <label htmlFor="email" className="text-sm font-medium">[m
+[31m-              Email[m
+[31m-            </label>[m
+[32m+[m[32m          <FormField>[m
+[32m+[m[32m            <FormLabel htmlFor="email">[m
+[32m+[m[32m              Email address[m
+[32m+[m[32m            </FormLabel>[m
+ [m
+[31m-            <input[m
+[32m+[m[32m            <Input[m
+               id="email"[m
+               name="email"[m
+               type="email"[m
+[31m-              autoComplete="email"[m
+[32m+[m[32m              placeholder="you@example.com"[m
+               value={email}[m
+[31m-              onChange={(event) => setEmail(event.target.value)}[m
+[31m-              className="h-10 w-full rounded-md border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"[m
+[32m+[m[32m              onChange={(event) =>[m
+[32m+[m[32m                setEmail(event.target.value)[m
+[32m+[m[32m              }[m
+[32m+[m[32m              autoComplete="email"[m
+[32m+[m[32m              hasError={hasError}[m
+[32m+[m[32m              disabled={isBusy}[m
+               required[m
+             />[m
+[31m-          </div>[m
+[32m+[m[32m          </FormField>[m
+[32m+[m
+[32m+[m[32m          <FormField>[m
+[32m+[m[32m            <FormLabel htmlFor="password">[m
+[32m+[m[32m              Password[m
+[32m+[m[32m            </FormLabel>[m
+[32m+[m
+[32m+[m[32m            <Input[m
+[32m+[m[32m              id="password"[m
+[32m+[m[32m              name="password"[m
+[32m+[m[32m              type="password"[m
+[32m+[m[32m              placeholder="Enter your password"[m
+[32m+[m[32m              value={password}[m
+[32m+[m[32m              onChange={(event) =>[m
+[32m+[m[32m                setPassword(event.target.value)[m
+[32m+[m[32m              }[m
+[32m+[m[32m              autoComplete="current-password"[m
+[32m+[m[32m              hasError={hasError}[m
+[32m+[m[32m              disabled={isBusy}[m
+[32m+[m[32m              required[m
+[32m+[m[32m            />[m
+[32m+[m[32m          </FormField>[m
+ [m
+[31m-          <div className="space-y-2">[m
+[31m-            <div className="flex items-center justify-between">[m
+[31m-              <label htmlFor="password" className="text-sm font-medium">[m
+[31m-                Password[m
+[31m-              </label>[m
+[32m+[m[32m          <FormMessage>{errorMessage}</FormMessage>[m
+ [m
+[31m-              <Link[m
+[31m-                href="/forgot-password"[m
+[31m-                className="text-xs font-medium text-primary hover:underline"[m
+[31m-              >[m
+[31m-                Forgot Password?[m
+[31m-              </Link>[m
+[31m-            </div>[m
+[31m-[m
+[31m-            <div className="relative">[m
+[31m-              <input[m
+[31m-                id="password"[m
+[31m-                name="password"[m
+[31m-                type={showPassword ? "text" : "password"}[m
+[31m-                autoComplete="current-password"[m
+[31m-                value={password}[m
+[31m-                onChange={(event) => setPassword(event.target.value)}[m
+[31m-                className="h-10 w-full rounded-md border bg-background px-3 pr-16 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"[m
+[31m-                required[m
+[31m-              />[m
+[31m-[m
+[31m-     

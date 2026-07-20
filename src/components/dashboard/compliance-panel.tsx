@@ -6,6 +6,13 @@ import {
 } from "lucide-react";
 
 import ComplianceChart from "@/components/dashboard/compliance-chart";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+
 
 type ComplianceDataPoint = {
   date: string;
@@ -59,8 +66,8 @@ export default function CompliancePanel({
         : "text-muted-foreground";
 
   return (
-    <article className="overflow-hidden rounded-2xl border bg-card shadow-sm">
-      <div className="flex flex-col justify-between gap-5 border-b p-6 sm:flex-row sm:items-start">
+    <Card className="overflow-hidden">
+      <CardHeader className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
         <div className="flex items-center gap-3">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Target className="size-5" />
@@ -97,9 +104,9 @@ export default function CompliancePanel({
             </span>
           </div>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="p-4 sm:p-6">
+      <CardContent className="p-4 sm:p-6">
         {hasData ? (
           <ComplianceChart data={data} />
         ) : (
@@ -109,9 +116,9 @@ export default function CompliancePanel({
             </p>
           </div>
         )}
-      </div>
+      </CardContent>
 
-      <div className="grid border-t sm:grid-cols-3">
+      <CardFooter className="grid items-stretch p-0 sm:grid-cols-3">
         <ComplianceStat
           label="Weekly average"
           value={`${weeklyAverage}%`}
@@ -139,8 +146,8 @@ export default function CompliancePanel({
           description={bestDay?.date ?? "No data yet"}
           bordered
         />
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }
 

@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  FormField,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form-field";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,22 +20,54 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
 
-  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+  async function handleDemoLogin() {
+    setIsDemoLoading(true);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/auth/demo", {
+        method: "POST",
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(
+          result.error ?? "Unable to start the demo."
+        );
+        return;
+      }
+
+      router.replace("/dashboard");
+      router.refresh();
+    } catch {
+      setErrorMessage(
+        "Something went wrong while starting the demo."
+      );
+    } finally {
+      setIsDemoLoading(false);
+    }
+  }
+
+  async function handleLogin(
+    event: FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     setErrorMessage("");
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
+      const { error } =
+        await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
 
       if (error) {
         setErrorMessage(error.message);
@@ -36,11 +77,16 @@ export default function LoginPage() {
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setErrorMessage("Something went wrong. Please try again.");
+      setErrorMessage(
+        "Something went wrong. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   }
+
+  const hasError = Boolean(errorMessage);
+  const isBusy = isSubmitting || isDemoLoading;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-10">
@@ -53,84 +99,90 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold tracking-tight">
             Welcome Back
           </h1>
-
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to manage your restaurant operations.
-          </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
+          <FormField>
+            <FormLabel htmlFor="email">
+              Email address
+            </FormLabel>
 
-            <input
+            <Input
               id="email"
               name="email"
               type="email"
-              autoComplete="email"
+              placeholder="you@example.com"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="h-10 w-full rounded-md border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
+              autoComplete="email"
+              hasError={hasError}
+              disabled={isBusy}
               required
             />
-          </div>
+          </FormField>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
+          <FormField>
+            <FormLabel htmlFor="password">
+              Password
+            </FormLabel>
 
-              <Link
-                href="/forgot-password"
-                className="text-xs font-medium text-primary hover:underline"
-              >
-                Forgot Password?
-              </Link>
-            </div>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
+              autoComplete="current-password"
+              hasError={hasError}
+              disabled={isBusy}
+              required
+            />
+          </FormField>
 
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="h-10 w-full rounded-md border bg-background px-3 pr-16 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                required
-              />
+          <FormMessage>{errorMessage}</FormMessage>
 
-              <button
-                type="button"
-                onClick={() => setShowPassword((current) => !current)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-          </div>
-
-          {errorMessage && (
-            <div
-              role="alert"
-              className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-            >
-              {errorMessage}
-            </div>
-          )}
-
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full"
+            isLoading={isSubmitting}
+            loadingText="Signing in..."
+            disabled={isDemoLoading}
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
-          </button>
+            Sign in
+          </Button>
+
+          {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
+            <>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleDemoLogin}
+                isLoading={isDemoLoading}
+                loadingText="Opening demo..."
+                disabled={isSubmitting}
+              >
+                Explore the live demo
+              </Button>
+            </>
+          )}
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
@@ -139,7 +191,7 @@ export default function LoginPage() {
             href="/signup"
             className="font-semibold text-primary hover:underline"
           >
-            Create An Account
+            Create an account
           </Link>
         </p>
       </section>
