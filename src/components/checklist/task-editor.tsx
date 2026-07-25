@@ -11,10 +11,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   FormDescription,
   FormField,
@@ -48,8 +45,7 @@ export function TaskEditor({
   const [maximumValue, setMaximumValue] = useState("");
   const [unit, setUnit] = useState("");
 
-  const [correctiveAction, setCorrectiveAction] =
-    useState("");
+  const [correctiveAction, setCorrectiveAction] = useState("");
 
   const [titleError, setTitleError] = useState("");
 
@@ -78,10 +74,12 @@ export function TaskEditor({
 
   const Icon = taskTypeOption?.icon;
 
-  function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-  ) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!taskType) {
+      return;
+    }
 
     if (!title.trim()) {
       setTitleError("Enter a name for this task.");
@@ -100,13 +98,11 @@ export function TaskEditor({
       minimumValue: parseOptionalNumber(minimumValue),
       maximumValue: parseOptionalNumber(maximumValue),
       unit: unit.trim() || undefined,
-      correctiveAction:
-        correctiveAction.trim() || undefined,
+      correctiveAction: correctiveAction.trim() || undefined,
     };
 
     onSave(task);
   }
-
   return (
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
@@ -137,9 +133,7 @@ export function TaskEditor({
                   Add {taskTypeOption?.title}
                 </h2>
 
-                <Badge variant="muted">
-                  {taskTypeOption?.title}
-                </Badge>
+                <Badge variant="muted">{taskTypeOption?.title}</Badge>
               </div>
 
               <p className="mt-1 text-sm text-muted-foreground">
@@ -162,9 +156,7 @@ export function TaskEditor({
         <form onSubmit={handleSubmit}>
           <div className="space-y-6 p-6">
             <FormField>
-              <FormLabel htmlFor="task-title">
-                Task name
-              </FormLabel>
+              <FormLabel htmlFor="task-title">Task name</FormLabel>
 
               <Input
                 id="task-title"
@@ -181,19 +173,14 @@ export function TaskEditor({
               />
 
               <FormDescription>
-                Use a short, clear instruction employees can
-                understand quickly.
+                Use a short, clear instruction employees can understand quickly.
               </FormDescription>
 
-              {titleError && (
-                <FormMessage>{titleError}</FormMessage>
-              )}
+              {titleError && <FormMessage>{titleError}</FormMessage>}
             </FormField>
 
             <FormField>
-              <FormLabel htmlFor="task-instructions">
-                Instructions
-              </FormLabel>
+              <FormLabel htmlFor="task-instructions">Instructions</FormLabel>
 
               <textarea
                 id="task-instructions"
@@ -201,14 +188,11 @@ export function TaskEditor({
                 rows={4}
                 placeholder="Add any details employees need to complete this task correctly."
                 className="flex w-full resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-all placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-                onChange={(event) =>
-                  setInstructions(event.target.value)
-                }
+                onChange={(event) => setInstructions(event.target.value)}
               />
 
               <FormDescription>
-                Optional guidance, standards, or additional
-                information.
+                Optional guidance, standards, or additional information.
               </FormDescription>
             </FormField>
 
@@ -246,9 +230,7 @@ export function TaskEditor({
                   rows={4}
                   placeholder="Describe the action employees must take to resolve the issue."
                   className="flex w-full resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-all placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-                  onChange={(event) =>
-                    setCorrectiveAction(event.target.value)
-                  }
+                  onChange={(event) => setCorrectiveAction(event.target.value)}
                 />
               </FormField>
             )}
@@ -260,9 +242,7 @@ export function TaskEditor({
                     type="checkbox"
                     checked={required}
                     className="mt-1 size-4 rounded border-input accent-primary"
-                    onChange={(event) =>
-                      setRequired(event.target.checked)
-                    }
+                    onChange={(event) => setRequired(event.target.checked)}
                   />
 
                   <span>
@@ -271,8 +251,8 @@ export function TaskEditor({
                     </span>
 
                     <span className="mt-1 block text-sm text-muted-foreground">
-                      Employees must complete this task before
-                      submitting the checklist.
+                      Employees must complete this task before submitting the
+                      checklist.
                     </span>
                   </span>
                 </label>
@@ -281,17 +261,11 @@ export function TaskEditor({
           </div>
 
           <footer className="flex flex-col-reverse gap-3 border-t px-6 py-4 sm:flex-row sm:justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-            >
+            <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
 
-            <Button type="submit">
-              Save task
-            </Button>
+            <Button type="submit">Save task</Button>
           </footer>
         </form>
       </div>
@@ -319,49 +293,37 @@ function TemperatureFields({
   return (
     <div className="grid gap-4 rounded-xl border bg-muted/20 p-4 sm:grid-cols-3">
       <FormField>
-        <FormLabel htmlFor="minimum-temperature">
-          Minimum
-        </FormLabel>
+        <FormLabel htmlFor="minimum-temperature">Minimum</FormLabel>
 
         <Input
           id="minimum-temperature"
           type="number"
           value={minimumValue}
           placeholder="34"
-          onChange={(event) =>
-            onMinimumChange(event.target.value)
-          }
+          onChange={(event) => onMinimumChange(event.target.value)}
         />
       </FormField>
 
       <FormField>
-        <FormLabel htmlFor="maximum-temperature">
-          Maximum
-        </FormLabel>
+        <FormLabel htmlFor="maximum-temperature">Maximum</FormLabel>
 
         <Input
           id="maximum-temperature"
           type="number"
           value={maximumValue}
           placeholder="41"
-          onChange={(event) =>
-            onMaximumChange(event.target.value)
-          }
+          onChange={(event) => onMaximumChange(event.target.value)}
         />
       </FormField>
 
       <FormField>
-        <FormLabel htmlFor="temperature-unit">
-          Unit
-        </FormLabel>
+        <FormLabel htmlFor="temperature-unit">Unit</FormLabel>
 
         <select
           id="temperature-unit"
           value={unit}
           className="flex h-10 w-full rounded-lg border border-input bg-background px-3 text-sm shadow-xs outline-none transition-all focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-          onChange={(event) =>
-            onUnitChange(event.target.value)
-          }
+          onChange={(event) => onUnitChange(event.target.value)}
         >
           <option value="°F">°F</option>
           <option value="°C">°C</option>
@@ -382,58 +344,44 @@ function NumberFields({
   return (
     <div className="grid gap-4 rounded-xl border bg-muted/20 p-4 sm:grid-cols-3">
       <FormField>
-        <FormLabel htmlFor="minimum-number">
-          Minimum
-        </FormLabel>
+        <FormLabel htmlFor="minimum-number">Minimum</FormLabel>
 
         <Input
           id="minimum-number"
           type="number"
           value={minimumValue}
           placeholder="0"
-          onChange={(event) =>
-            onMinimumChange(event.target.value)
-          }
+          onChange={(event) => onMinimumChange(event.target.value)}
         />
       </FormField>
 
       <FormField>
-        <FormLabel htmlFor="maximum-number">
-          Maximum
-        </FormLabel>
+        <FormLabel htmlFor="maximum-number">Maximum</FormLabel>
 
         <Input
           id="maximum-number"
           type="number"
           value={maximumValue}
           placeholder="100"
-          onChange={(event) =>
-            onMaximumChange(event.target.value)
-          }
+          onChange={(event) => onMaximumChange(event.target.value)}
         />
       </FormField>
 
       <FormField>
-        <FormLabel htmlFor="number-unit">
-          Unit
-        </FormLabel>
+        <FormLabel htmlFor="number-unit">Unit</FormLabel>
 
         <Input
           id="number-unit"
           value={unit}
           placeholder="Cases, pounds, count..."
-          onChange={(event) =>
-            onUnitChange(event.target.value)
-          }
+          onChange={(event) => onUnitChange(event.target.value)}
         />
       </FormField>
     </div>
   );
 }
 
-function getDefaultUnit(
-  taskType: ChecklistTaskType | null,
-) {
+function getDefaultUnit(taskType: ChecklistTaskType | null) {
   if (taskType === "temperature") {
     return "°F";
   }
@@ -441,9 +389,7 @@ function getDefaultUnit(
   return "";
 }
 
-function getTitlePlaceholder(
-  taskType: ChecklistTaskType,
-) {
+function getTitlePlaceholder(taskType: ChecklistTaskType) {
   const placeholders: Record<ChecklistTaskType, string> = {
     checkbox: "Confirm handwashing station is stocked",
     temperature: "Record walk-in cooler temperature",
@@ -451,8 +397,7 @@ function getTitlePlaceholder(
     notes: "Document any maintenance concerns",
     number: "Record the number of prepared trays",
     time: "Record when the delivery arrived",
-    "corrective-action":
-      "Resolve food held outside the safe temperature range",
+    "corrective-action": "Resolve food held outside the safe temperature range",
   };
 
   return placeholders[taskType];
@@ -465,7 +410,5 @@ function parseOptionalNumber(value: string) {
 
   const parsedValue = Number(value);
 
-  return Number.isNaN(parsedValue)
-    ? undefined
-    : parsedValue;
+  return Number.isNaN(parsedValue) ? undefined : parsedValue;
 }
