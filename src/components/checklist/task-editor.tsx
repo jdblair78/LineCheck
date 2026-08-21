@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
 import type { ChecklistTask } from "@/lib/checklist-task";
@@ -25,12 +25,21 @@ type TaskEditorProps = {
   checklistId: string;
   taskType: ChecklistTaskType | null;
   position: number;
-  onClose: () => void;
-  onSave: (task: ChecklistTask) => void;
+  onClose: unknown;
+  onSave: unknown;
 };
 
-export function TaskEditor({
-  open,
+export function TaskEditor(props: TaskEditorProps) {
+  const { open, taskType } = props;
+
+  if (!open || !taskType) {
+    return null;
+  }
+
+  return <TaskEditorContent key={taskType} {...props} />;
+}
+
+function TaskEditorContent({
   checklistId,
   taskType,
   position,
@@ -49,35 +58,29 @@ export function TaskEditor({
 
   const [titleError, setTitleError] = useState("");
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    setTitle("");
-    setInstructions("");
-    setRequired(true);
-    setMinimumValue("");
-    setMaximumValue("");
-    setUnit(getDefaultUnit(taskType));
-    setCorrectiveAction("");
-    setTitleError("");
-  }, [open, taskType]);
-
-  if (!open || !taskType) {
-    return null;
-  }
-
+  const activeTaskType = taskType as ChecklistTaskType;
   const taskTypeOption = checklistTaskTypes.find(
-    (option) => option.type === taskType,
+    (option) => option.type === activeTaskType,
   );
 
   const Icon = taskTypeOption?.icon;
 
+  const handleClose = () => {
+    if (typeof onClose === "function") {
+      (onClose as () => void)();
+    }
+  };
+
+  const handleSave = (task: ChecklistTask) => {
+    if (typeof onSave === "function") {
+      (onSave as (task: ChecklistTask) => void)(task);
+    }
+  };
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!taskType) {
+    if (!activeTaskType) {
       return;
     }
 
@@ -89,7 +92,7 @@ export function TaskEditor({
     const task: ChecklistTask = {
       id: crypto.randomUUID(),
       checklistId,
-      type: taskType,
+      type: activeTaskType,
       title: title.trim(),
       instructions: instructions.trim(),
       required,
@@ -101,13 +104,13 @@ export function TaskEditor({
       correctiveAction: correctiveAction.trim() || undefined,
     };
 
-    onSave(task);
+    handleSave(task);
   }
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
       role="presentation"
-      onMouseDown={onClose}
+      onMouseDown={handleClose}
     >
       <div
         role="dialog"
@@ -147,7 +150,7 @@ export function TaskEditor({
             variant="ghost"
             size="icon-sm"
             aria-label="Close task editor"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <X className="size-4" />
           </Button>
@@ -162,7 +165,7 @@ export function TaskEditor({
                 id="task-title"
                 value={title}
                 hasError={Boolean(titleError)}
-                placeholder={getTitlePlaceholder(taskType)}
+                placeholder={getTitlePlaceholder(activeTaskType)}
                 onChange={(event) => {
                   setTitle(event.target.value);
 
@@ -196,7 +199,7 @@ export function TaskEditor({
               </FormDescription>
             </FormField>
 
-            {taskType === "temperature" && (
+            {activeTaskType === "temperature" && (
               <TemperatureFields
                 minimumValue={minimumValue}
                 maximumValue={maximumValue}
@@ -207,7 +210,7 @@ export function TaskEditor({
               />
             )}
 
-            {taskType === "number" && (
+            {activeTaskType === "number" && (
               <NumberFields
                 minimumValue={minimumValue}
                 maximumValue={maximumValue}
@@ -218,7 +221,7 @@ export function TaskEditor({
               />
             )}
 
-            {taskType === "corrective-action" && (
+            {activeTaskType === "corrective-action" && (
               <FormField>
                 <FormLabel htmlFor="corrective-action">
                   Required action
@@ -261,7 +264,7 @@ export function TaskEditor({
           </div>
 
           <footer className="flex flex-col-reverse gap-3 border-t px-6 py-4 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
 
@@ -379,14 +382,6 @@ function NumberFields({
       </FormField>
     </div>
   );
-}
-
-function getDefaultUnit(taskType: ChecklistTaskType | null) {
-  if (taskType === "temperature") {
-    return "°F";
-  }
-
-  return "";
 }
 
 function getTitlePlaceholder(taskType: ChecklistTaskType) {

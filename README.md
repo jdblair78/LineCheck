@@ -9,8 +9,8 @@ LineCheck replaces paper-based restaurant line checks with a responsive digital 
 
 ## 🚀 Live Demo
 
-**Live Application:** [View LineCheck](ADD_YOUR_VERCEL_URL_HERE)
-
+**Live Application:** [View LineCheck]
+https://line-check-two.vercel.app/dashboard
 Use the **Explore Live Demo** option on the login page to explore LineCheck without creating an account.
 
 ---
