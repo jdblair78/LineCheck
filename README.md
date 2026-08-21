@@ -494,8 +494,3 @@ Frontend Developer
 ## License
 
 LineCheck is currently being developed as a portfolio and educational project. Licensing terms will be determined before any public commercial release.
-
-
-
- 
- 
