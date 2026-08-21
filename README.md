@@ -1,362 +1,344 @@
-# ✅ LineCheck
+# LineCheck
 
-A mobile-first food-safety and kitchen-management platform built for restaurant teams.
+**A modern restaurant food-safety and operations platform built with Next.js, TypeScript, Supabase, and Tailwind CSS.**
 
-LineCheck replaces paper clipboard logs with digital checklists that managers can create once and employees can complete from any phone, tablet, or computer.
+LineCheck replaces paper-based restaurant line checks with a responsive digital workflow for creating checklists, completing food-safety tasks, documenting corrective actions, and monitoring operational compliance.
 
-> **Project Status:** In active development
+> **Status:** 🚧 Active Development
+> **Focus:** Full-stack SaaS architecture • Responsive UI • Authentication • Restaurant operations
 
-## Overview
+## 🚀 Live Demo
 
-Restaurants rely on regular line checks to verify food temperatures, equipment conditions, cleanliness, and operational readiness.
+**Live Application:** [View LineCheck](ADD_YOUR_VERCEL_URL_HERE)
 
-Paper-based checks can be difficult to manage because they are easy to lose, hard to audit, and time-consuming to review. LineCheck creates a structured digital workflow for completing, tracking, and reviewing food-safety checks.
+Use the **Explore Live Demo** option on the login page to explore LineCheck without creating an account.
 
-The platform is being designed as a real SaaS application with authentication, persistent cloud data, responsive interfaces, automated validation, reporting, and deployment.
+---
 
-## The Problem
+## 📸 Application Preview
 
-Traditional paper line checks can lead to:
+*Add screenshots or GIFs here as the application develops.*
 
-* Missing or incomplete records
-* Illegible handwriting
-* Incorrect food-temperature entries
-* Delayed corrective action
-* Difficulty identifying recurring problems
-* Limited visibility across restaurant shifts
-* Time-consuming preparation for inspections
+Recommended screenshots:
 
-## The Solution
+* Dashboard
+* Checklist management
+* Checklist builder
+* Task editor
+* Mobile checklist experience
 
-LineCheck gives restaurant managers and employees a centralized platform for creating, running, and reviewing operational checklists.
+---
 
-Managers can define checklist requirements and acceptable temperature ranges. Employees can then complete those checks using a streamlined mobile interface.
+## About the Project
 
-When a value falls outside an acceptable range, LineCheck flags the item and requires the employee to document the corrective action before submission.
+Restaurant teams perform routine line checks throughout the day to verify food temperatures, sanitation, equipment condition, cleanliness, and operational readiness.
 
-## Core Features
+Traditional paper logs create several problems:
 
-### Dashboard
+* Records can be lost or incomplete
+* Temperature violations may not receive immediate attention
+* Managers have limited visibility across shifts
+* Corrective actions are difficult to track
+* Historical records are difficult to search
+* Preparing documentation for inspections takes additional time
 
-The dashboard provides a quick overview of restaurant operations, including:
+**LineCheck turns those workflows into a structured digital system.**
 
-* Today’s scheduled checks
-* Completed and incomplete checks
-* Flagged checklist items
-* Recent activity
-* Completion streaks
-* Overall food-safety status
+Managers can create reusable operational checklists, configure different task types, monitor completion, and review restaurant performance from a centralized dashboard.
+
+Employees will be able to complete assigned checks from a phone, tablet, or desktop while LineCheck validates required information and identifies potential food-safety issues.
+
+---
+
+## ✨ Current Features
+
+### Authentication & Security
+
+* User signup and login
+* Supabase authentication
+* Protected dashboard routes
+* Automatic user profile creation
+* Session management
+* Secure logout flow
+* Environment-based configuration
+
+### Operations Dashboard
+
+* Restaurant operations overview
+* Compliance metrics
+* Weekly compliance visualization
+* Operational reminders
+* Equipment alerts
+* Team overview
+* Responsive navigation
+* User profile menu
+* Dark-mode support
+
+### Checklist Management
+
+Managers can create and manage operational checklists with:
+
+* Checklist name
+* Restaurant location
+* Category
+* Shift
+* Estimated completion time
+* Active/inactive status
+* Dynamic task counts
 
 ### Checklist Builder
 
-Managers can create reusable restaurant checklists with:
+LineCheck includes a reusable task-building system supporting multiple operational task types.
 
-* Custom checklist names
-* Scheduled completion windows
-* Pass-or-fail items
-* Temperature-entry items
-* Minimum acceptable temperatures
-* Maximum acceptable temperatures
-* Required and optional fields
-* Custom item instructions
+Current task types include:
 
-### Run Check
+* ✅ Checkbox tasks
+* 🌡️ Temperature checks
+* 📷 Photo verification
+* 📝 Notes
+* 🔢 Numeric entries
+* 🕐 Time entries
+* ⚠️ Corrective actions
 
-Employees can complete assigned checks from a phone or tablet.
+Tasks can contain:
 
-The check-running experience includes:
+* Custom instructions
+* Required/optional status
+* Minimum values
+* Maximum values
+* Measurement units
+* Corrective-action requirements
 
-* Mobile-first layout
-* Large touch-friendly controls
-* Numeric temperature input
-* Pass-or-fail selections
-* Real-time validation
-* Visual warnings for failed items
-* Required corrective-action notes
-* Submission blocking when required information is missing
+The task editor dynamically changes based on the selected task type.
 
-### History
+### Demo Experience
 
-Completed checks are stored in a searchable history.
+LineCheck includes a demo workflow so recruiters and visitors can explore the application without creating a permanent account.
 
-Each record can include:
+Demo checklist data and tasks can be persisted locally in the browser while the production database integration continues to be developed.
 
-* Checklist name
-* Completion date and time
-* Employee who completed the check
-* Recorded temperatures
-* Passed and failed items
-* Corrective-action notes
-* Flagged equipment or food items
+---
 
-Planned history tools include:
+## 🧠 Smart Food-Safety Validation
 
-* Date filtering
-* Employee filtering
-* Checklist filtering
-* CSV export
+One of LineCheck's primary goals is to make operational problems visible immediately.
 
-### Reports
+For example, temperature-based tasks can define an acceptable range:
 
-The reporting area will help managers recognize food-safety and operational trends.
+```text
+Walk-In Cooler Temperature
 
-Planned reporting includes:
+Minimum: 34°F
+Maximum: 41°F
+```
 
-* Checklist completion rates
-* Most frequently flagged items
-* Temperature history
-* Corrective-action frequency
-* Repeated equipment issues
-* Visual charts and performance trends
+The completed employee workflow is being designed to detect values outside the configured range and:
 
-## Smart Validation
+1. Flag the task
+2. Display a visual warning
+3. Require corrective-action documentation
+4. Prevent incomplete submissions
+5. Preserve the incident for historical reporting
 
-Temperature-based checklist items include acceptable minimum and maximum values.
+This creates accountability at the moment a food-safety issue occurs rather than discovering the problem later during a record review.
 
-When an employee enters a temperature outside the approved range, LineCheck will:
+---
 
-1. Mark the item as failed
-2. Display a clear visual warning
-3. Require a corrective-action note
-4. Prevent incomplete submission
-5. Save the incident for future reporting
-
-This workflow helps teams respond to food-safety problems immediately instead of discovering them later during a record review.
-
-## Planned Advanced Features
-
-### Equipment Watch
-
-LineCheck will identify items that have been flagged multiple times within a short period.
-
-For example, equipment flagged twice within seven days may be added to an equipment-watch list so managers can investigate recurring problems.
-
-### Inspector View
-
-Managers will be able to generate a secure, read-only link that displays recent food-safety records.
-
-The inspector view is planned to include:
-
-* The previous 30 days of completed checks
-* Completion timestamps
-* Recorded temperatures
-* Corrective actions
-* Flagged checklist items
-
-This view will not allow inspectors or external users to edit restaurant data.
-
-## Technology Stack
+## 🛠️ Tech Stack
 
 ### Frontend
 
-* Next.js
-* React
-* TypeScript
-* Tailwind CSS
-* Recharts
+* **Next.js 16** — App Router and application architecture
+* **React** — Component-based UI
+* **TypeScript** — Type-safe application models
+* **Tailwind CSS v4** — Responsive design system
+* **Base UI** — Accessible UI primitives
+* **Lucide React** — Interface icons
+* **Recharts** — Dashboard data visualization
 
-### Backend and Data
+### Backend & Authentication
 
-* Firebase Authentication
-* Cloud Firestore
-
-### Testing and Automation
-
-* Jest
-* React Testing Library
-* GitHub Actions
+* **Supabase**
+* Supabase Authentication
+* PostgreSQL database
+* Server-side session handling
+* Database triggers for profile creation
 
 ### Deployment
 
-* Vercel
+* **Vercel**
+* Environment-based production configuration
+* GitHub-based deployment workflow
 
-## Why These Technologies?
+---
 
-### Next.js
+## 🏗️ Application Architecture
 
-Next.js provides routing, rendering, performance optimization, and a scalable structure for building a production-ready SaaS application.
+```text
+src/
+├── app/
+│   ├── (auth)/
+│   │   ├── login/
+│   │   └── signup/
+│   │
+│   └── (dashboard)/
+│       ├── dashboard/
+│       ├── checklists/
+│       ├── equipment/
+│       ├── history/
+│       ├── reports/
+│       └── settings/
+│
+├── components/
+│   ├── auth/
+│   ├── checklists/
+│   ├── dashboard/
+│   ├── layout/
+│   └── ui/
+│
+└── lib/
+    ├── supabase/
+    ├── checklist-task.ts
+    └── checklist-task-types.ts
+```
 
-### TypeScript
+The project uses reusable UI and domain components rather than styling each screen independently.
 
-TypeScript improves reliability by providing type safety for users, restaurants, checklists, checklist items, and completed records.
+---
 
-### Firebase
+## 🎨 Design System
 
-Firebase Authentication and Firestore provide user management and real-time cloud data without requiring a separate custom backend during the initial development stage.
+LineCheck includes a reusable application design system covering:
 
-### Tailwind CSS
+* Brand colors
+* Semantic success, warning, danger, and information states
+* Typography hierarchy
+* Consistent spacing
+* Border radius
+* Shadows and elevation
+* Buttons and variants
+* Inputs
+* Cards
+* Badges
+* Form states
+* Responsive layouts
 
-Tailwind CSS supports rapid development of a consistent, responsive, and mobile-first interface.
+This allows new features to share the same visual language without recreating styles for every page.
 
-### Recharts
+---
 
-Recharts will be used to visualize completion rates, temperature trends, and recurring food-safety issues.
+## 👥 Application Roles
 
-## Application Roles
+LineCheck is being designed around a role-based restaurant hierarchy.
 
-### Manager
+### Managers
 
 Managers will be able to:
 
 * Create and edit checklists
-* Define acceptable temperature ranges
-* Schedule checklist windows
+* Configure checklist tasks
+* Define operational standards
+* Manage restaurant employees
 * Review completed checks
-* View flagged items
-* Read corrective-action notes
-* Access reports
-* Export records
+* Review equipment alerts
+* Document corrective actions
+* Access reports and history
+* Configure restaurant settings
 
-### Employee
+### Employees
 
 Employees will be able to:
 
 * View assigned checks
-* Complete checklists
-* Enter temperatures
-* Mark pass-or-fail items
+* Complete checklist tasks
+* Record temperatures
+* Submit photos and notes
 * Document corrective actions
+* Review equipment alerts
 * Submit completed checks
 
-## Planned Application Routes
+---
+
+## 🗺️ Application Routes
 
 ```text
-/                   Marketing or sign-in page
-/login              User authentication
-/dashboard          Restaurant overview
-/checklists         Checklist management
-/checklists/new     Create a checklist
-/checklists/[id]    View or edit a checklist
-/run/[id]           Complete a scheduled check
-/history            Completed check records
-/reports            Trends and reporting
-/settings           Account and restaurant settings
-/inspect/[token]    Secure read-only inspector view
+/login                 Authentication
+/signup                Account creation
+/dashboard             Restaurant operations dashboard
+
+/checklists             Checklist management
+/checklists/new         Create checklist
+/checklists/[id]        Checklist builder
+
+/history                Completed check history
+/reports                Compliance reporting
+/equipment              Equipment alerts
+/settings               Restaurant settings
+/profile                User profile
 ```
 
-## Data Model
+Additional execution and inspection routes will be introduced as development continues.
 
-LineCheck is being structured around several primary data types.
+---
 
-### User
-
-```typescript
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: "manager" | "employee";
-  restaurantId: string;
-};
-```
-
-### Checklist
-
-```typescript
-type Checklist = {
-  id: string;
-  restaurantId: string;
-  name: string;
-  startTime: string;
-  endTime: string;
-  items: ChecklistItem[];
-  createdBy: string;
-  createdAt: Date;
-};
-```
-
-### Checklist Item
-
-```typescript
-type ChecklistItem = {
-  id: string;
-  label: string;
-  type: "passFail" | "temperature";
-  required: boolean;
-  minimumTemperature?: number;
-  maximumTemperature?: number;
-};
-```
-
-### Completed Check
-
-```typescript
-type CompletedCheck = {
-  id: string;
-  checklistId: string;
-  restaurantId: string;
-  completedBy: string;
-  completedAt: Date;
-  responses: CheckResponse[];
-  hasFlaggedItems: boolean;
-};
-```
-
-## Getting Started
+## 💻 Running LineCheck Locally
 
 ### Prerequisites
 
-Make sure the following tools are installed:
+Install:
 
 * Node.js
 * npm
 * Git
-* A Firebase account
 
-### 1. Clone the Repository
+You will also need a Supabase project for authentication and database functionality.
 
-```bash
-git clone YOUR_REPOSITORY_URL
-```
-
-### 2. Open the Project
+### 1. Clone the repository
 
 ```bash
-cd linecheck
+git clone https://github.com/jdblair78/LineCheck.git
 ```
 
-### 3. Install Dependencies
+### 2. Enter the project
+
+```bash
+cd LineCheck
+```
+
+### 3. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 4. Configure Environment Variables
+### 4. Configure environment variables
 
-Create a `.env.local` file in the root of the project:
+Create:
 
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```text
+.env.local
 ```
 
-Do not commit `.env.local` to GitHub.
+Add your Supabase credentials:
 
-### 5. Start the Development Server
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Never commit `.env.local` or private credentials to GitHub.
+
+### 5. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Open the application at:
+Then open:
 
 ```text
 http://localhost:3000
 ```
-
-## Available Scripts
-
-### Development
-
-```bash
-npm run dev
-```
-
-Starts the Next.js development server.
 
 ### Production Build
 
@@ -364,169 +346,155 @@ Starts the Next.js development server.
 npm run build
 ```
 
-Creates an optimized production build.
+---
 
-### Production Server
+## 🧩 Current Development Focus
 
-```bash
-npm start
-```
+The checklist builder is currently under active development.
 
-Runs the optimized production build locally.
+### Completed
 
-### Testing
+* [x] Next.js application architecture
+* [x] Responsive dashboard
+* [x] LineCheck design system
+* [x] Supabase authentication
+* [x] Signup and login
+* [x] Protected dashboard routes
+* [x] Logout flow
+* [x] User profile creation
+* [x] Checklist management interface
+* [x] Checklist creation workflow
+* [x] Task type selection
+* [x] Dynamic task editor
+* [x] Demo checklist persistence
 
-```bash
-npm test
-```
+### In Progress
 
-Runs the automated test suite.
+* [ ] Improved task list UI
+* [ ] Edit checklist tasks
+* [ ] Delete tasks
+* [ ] Duplicate tasks
+* [ ] Drag-and-drop task ordering
+* [ ] Supabase checklist persistence
 
-### Linting
+### Planned
 
-```bash
-npm run lint
-```
+* [ ] Employee checklist execution
+* [ ] Temperature validation
+* [ ] Corrective-action workflows
+* [ ] Restaurant management
+* [ ] Employee management
+* [ ] Checklist history
+* [ ] Equipment tracking
+* [ ] Reporting and analytics
+* [ ] Inspection-ready records
 
-Checks the project for code-quality and formatting issues.
+---
 
-## MVP Requirements
+## 🔭 Product Roadmap
 
-The initial LineCheck release will include:
+### Checklist Builder
 
-* User authentication
-* Manager and employee roles
-* Checklist creation
-* Pass-or-fail checklist items
-* Temperature checklist items
-* Mobile checklist completion
-* Required corrective-action notes
-* Submission validation
-* Completed-check history
-* Dashboard status overview
-* Firestore data persistence
-* Automated testing
-* Vercel deployment
+Complete the manager experience for creating, editing, organizing, and assigning operational checklists.
 
-## Development Roadmap
+### Employee Execution
 
-### Phase 1 — Foundation
+Build a mobile-first interface that allows restaurant employees to quickly complete assigned checks during active shifts.
 
-* Set up Next.js and TypeScript
-* Configure Tailwind CSS
-* Create the application layout
-* Define TypeScript data models
-* Configure Firebase
+### Data Persistence
 
-### Phase 2 — Authentication and Checklists
+Move checklist and task persistence from the demo browser workflow into the Supabase PostgreSQL database.
 
-* Add user authentication
-* Implement manager and employee roles
-* Build the checklist dashboard
-* Create the checklist builder
-* Store checklists in Firestore
+### Operations & Reporting
 
-### Phase 3 — Check Execution
+Connect completed checks to dashboard metrics, history, equipment alerts, corrective actions, and reporting.
 
-* Build the mobile-first check workflow
-* Add pass-or-fail controls
-* Add temperature inputs
-* Validate acceptable ranges
-* Require corrective-action notes
-* Save completed checks
+### Multi-Restaurant Architecture
 
-### Phase 4 — History and Dashboard
+Expand LineCheck to support restaurant groups with brand-level standards and location-level management.
 
-* Build completed-check history
-* Add filtering
-* Display status summaries
-* Show recent activity
-* Complete the MVP deployment
+---
 
-### Phase 5 — Testing and Automation
+## ♿ Accessibility & UX Goals
 
-* Add component tests
-* Add workflow tests
-* Configure GitHub Actions
-* Test validation and submission behavior
+LineCheck is designed for employees working in active restaurant environments where speed and clarity matter.
 
-### Phase 6 — Reporting and Launch
-
-* Add reporting charts
-* Add CSV export
-* Improve accessibility
-* Polish responsive layouts
-* Complete project documentation
-* Launch the production version
-
-## Accessibility Goals
-
-LineCheck is being designed for fast use in active restaurant environments.
-
-Accessibility goals include:
+The interface prioritizes:
 
 * Large touch-friendly controls
-* Clear labels
-* Strong visual contrast
-* Keyboard navigation
+* Responsive mobile layouts
+* Clear form labels
+* Strong visual hierarchy
 * Visible focus states
-* Screen-reader-friendly forms
-* Error messages that do not rely on color alone
-* Responsive support for phones and tablets
+* Keyboard navigation
+* Semantic status indicators
+* Errors that do not rely solely on color
+* Accessible reusable components
 
-## What I Am Learning
+---
 
-This project is strengthening my understanding of:
+## 💡 What This Project Demonstrates
 
-* Planning and building a full SaaS application
-* Developing with Next.js and TypeScript
-* Designing mobile-first workflows
-* Managing authentication and user roles
-* Structuring Firestore collections
-* Building dynamic forms
-* Validating operational data
-* Creating reusable React components
-* Writing component and integration tests
-* Configuring continuous integration
-* Visualizing data with charts
-* Deploying production applications with Vercel
+LineCheck is a portfolio project focused on demonstrating more than individual UI components.
 
-## Future Improvements
+It showcases experience with:
 
-After the MVP is complete, possible improvements include:
+* Building a full SaaS-style application
+* Next.js App Router architecture
+* React component design
+* TypeScript data modeling
+* Supabase authentication
+* PostgreSQL-backed application architecture
+* Protected application routes
+* Reusable component systems
+* Responsive product design
+* Dynamic forms
+* Client-side state management
+* Data visualization
+* Production deployment with Vercel
+* Git and GitHub development workflows
 
-* Multiple restaurant locations
-* Corporate and district-manager dashboards
-* Push and email notifications
-* Missed-check alerts
-* Custom checklist scheduling
+---
+
+## Future Features
+
+Future development may include:
+
+* Multi-location restaurant management
+* Brand and district-level dashboards
+* Missed-check notifications
 * Equipment maintenance records
 * Photo attachments
 * Employee signatures
 * Offline checklist support
-* PDF report generation
-* Inspection-ready audit reports
-* Subscription plans and billing
+* CSV/PDF reporting
+* Inspection-ready audit views
 * Restaurant performance comparisons
+* Subscription and billing support
+
+---
 
 ## Food-Safety Disclaimer
 
-LineCheck is an operational recordkeeping and checklist-management tool.
+LineCheck is an operational recordkeeping and checklist-management tool. It does not replace employee training, local health-code requirements, certified food-safety procedures, or professional regulatory guidance.
 
-It does not replace employee training, local health-code requirements, certified food-safety procedures, or professional regulatory guidance. Restaurant operators are responsible for configuring checklist requirements and temperature ranges according to applicable laws and company policies.
+Restaurant operators are responsible for configuring operational requirements and temperature ranges according to applicable regulations and company policies.
 
-## Author
+---
+
+## 👨‍💻 Developer
 
 **Joshua Blair**
-
 Frontend Developer
 
-* [GitHub](https://github.com/jdblair78)
-* [LinkedIn](https://www.linkedin.com/in/joshua-blair-4310a183)
+[Portfolio](https://profile-1-coral.vercel.app/) • [GitHub](https://github.com/jdblair78) • [LinkedIn](https://www.linkedin.com/in/joshua-blair-4310a183/)
+
+---
 
 ## License
 
-This project is being developed for educational and portfolio purposes. Licensing information will be added before public production use.
+LineCheck is currently being developed as a portfolio and educational project. Licensing terms will be determined before any public commercial release.
+
 
 
  
