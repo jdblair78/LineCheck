@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -8,6 +8,8 @@ import {
   Clock3,
   MoreHorizontal,
   Plus,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -76,34 +78,71 @@ function formatLabel(value: string) {
 }
 
 export default function ChecklistsPage() {
-  const checklists = useMemo(() => {
+  const [checklists, setChecklists] = useState<Checklist[]>(sampleChecklists);
+
+  useEffect(() => {
     try {
       const storedChecklists = localStorage.getItem(
         "linecheck_demo_checklists",
       );
 
       if (!storedChecklists) {
-        return sampleChecklists;
+        return;
       }
 
       const demoChecklists = JSON.parse(storedChecklists) as Checklist[];
 
-      const formattedDemoChecklists: Checklist[] = demoChecklists.map(
-        (checklist) => ({
-          ...checklist,
-          category: formatLabel(checklist.category),
-          shift: formatLabel(checklist.shift),
-          updatedAt: "Just now",
-        }),
-      );
+      const formattedDemoChecklists = demoChecklists.map((checklist) => ({
+        ...checklist,
+        category: formatLabel(checklist.category),
+        shift: formatLabel(checklist.shift),
+        updatedAt: "Just now",
+      }));
 
-      return [...formattedDemoChecklists, ...sampleChecklists];
+      startTransition(() => {
+        setChecklists([...formattedDemoChecklists, ...sampleChecklists]);
+      });
     } catch (error) {
       console.error("Unable to load demo checklists:", error);
-
-      return sampleChecklists;
     }
   }, []);
+
+  function handleChecklistDelete(checklist: Checklist) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${checklist.name}"? This will also delete all tasks associated with this checklist.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const storedChecklists = localStorage.getItem(
+        "linecheck_demo_checklists",
+      );
+
+      if (storedChecklists) {
+        const demoChecklists = JSON.parse(storedChecklists) as Checklist[];
+
+        const updatedDemoChecklists = demoChecklists.filter(
+          (item) => item.id !== checklist.id,
+        );
+
+        localStorage.setItem(
+          "linecheck_demo_checklists",
+          JSON.stringify(updatedDemoChecklists),
+        );
+      }
+
+      localStorage.removeItem(`linecheck_demo_tasks_${checklist.id}`);
+
+      setChecklists((currentChecklists) =>
+        currentChecklists.filter((item) => item.id !== checklist.id),
+      );
+    } catch (error) {
+      console.error("Unable to delete checklist:", error);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -126,7 +165,11 @@ export default function ChecklistsPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {checklists.map((checklist) => (
-          <ChecklistCard key={checklist.id} checklist={checklist} />
+          <ChecklistCard
+            key={checklist.id}
+            checklist={checklist}
+            onDelete={handleChecklistDelete}
+          />
         ))}
       </section>
     </div>
@@ -135,10 +178,13 @@ export default function ChecklistsPage() {
 
 type ChecklistCardProps = {
   checklist: Checklist;
+  onDelete: (checklist: Checklist) => void;
 };
 
-function ChecklistCard({ checklist }: ChecklistCardProps) {
+function ChecklistCard({ checklist, onDelete }: ChecklistCardProps) {
   const isActive = checklist.status === "active";
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <Card hover className="overflow-hidden">
@@ -157,14 +203,54 @@ function ChecklistCard({ checklist }: ChecklistCardProps) {
           </div>
         </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label={`Open actions for ${checklist.name}`}
-        >
-          <MoreHorizontal className="size-4" />
-        </Button>
+        <div className="relative">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={`Open actions for ${checklist.name}`}
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((current) => !current)}
+          >
+            <MoreHorizontal className="size-4" />
+          </Button>
+
+          {isMenuOpen && (
+            <div className="absolute right-0 top-10 z-50 w-52 rounded-lg border bg-popover p-1 shadow-lg">
+              <Link
+                href={`/checklists/${checklist.id}?addTask=true`}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Plus className="size-4" />
+                Add task
+              </Link>
+
+              <Link
+                href={`/checklists/${checklist.id}/edit`}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-muted"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Pencil className="size-4" />
+                Edit checklist
+              </Link>
+
+              <div className="my-1 border-t" />
+
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-destructive/10"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onDelete(checklist);
+                }}
+              >
+                <Trash2 className="size-4" />
+                Delete checklist
+              </button>
+            </div>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-5">

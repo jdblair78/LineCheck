@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -11,6 +11,14 @@ import {
   ListChecks,
   MapPin,
   Plus,
+  CheckSquare,
+  Camera,
+  FileText,
+  Hash,
+  Thermometer,
+  TriangleAlert,
+  Trash2,
+  Pencil,
 } from "lucide-react";
 
 import { TaskEditor } from "@/components/checklist/task-editor";
@@ -99,6 +107,34 @@ const sampleChecklists: Checklist[] = [
   },
 ];
 
+function getTaskTypeIcon(type: ChecklistTaskType) {
+  switch (type) {
+    case "checkbox":
+      return CheckSquare;
+
+    case "temperature":
+      return Thermometer;
+
+    case "photo":
+      return Camera;
+
+    case "notes":
+      return FileText;
+
+    case "number":
+      return Hash;
+
+    case "time":
+      return Clock3;
+
+    case "corrective-action":
+      return TriangleAlert;
+
+    default:
+      return CheckSquare;
+  }
+}
+
 function formatLabel(value: string) {
   return value
     .split("-")
@@ -108,17 +144,36 @@ function formatLabel(value: string) {
 
 export default function ChecklistDetailPage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [checklist, setChecklist] = useState<Checklist | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [isTaskPickerOpen, setIsTaskPickerOpen] = useState(false);
+
+  useEffect(() => {
+  const shouldOpenTaskPicker =
+    searchParams.get("addTask") === "true";
+
+  if (!shouldOpenTaskPicker) {
+    return;
+  }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setIsTaskPickerOpen(true);
+
+  router.replace(`/checklists/${params.id}`);
+}, [searchParams, router, params.id]);
+
   const [isTaskEditorOpen, setIsTaskEditorOpen] = useState(false);
 
   const [selectedTaskType, setSelectedTaskType] =
     useState<ChecklistTaskType | null>(null);
 
   const [tasks, setTasks] = useState<ChecklistTask[]>([]);
+
+  const [editingTask, setEditingTask] = useState<ChecklistTask | null>(null);
 
   useEffect(() => {
     try {
@@ -170,57 +225,55 @@ export default function ChecklistDetailPage() {
 
   /* eslint-disable react-hooks/set-state-in-effect */
 
-useEffect(() => {
-  try {
-    const checklistId = params.id;
+  useEffect(() => {
+    try {
+      const checklistId = params.id;
 
-    const sampleChecklist = sampleChecklists.find(
-      (item) => item.id === checklistId,
-    );
+      const sampleChecklist = sampleChecklists.find(
+        (item) => item.id === checklistId,
+      );
 
-    if (sampleChecklist) {
-      setChecklist(sampleChecklist);
-      return;
-    }
-
-    // remaining checklist-loading code...
-  } finally {
-    setIsLoading(false);
-  }
-}, [params.id]);
-
-useEffect(() => {
-  try {
-    const storedTasks = localStorage.getItem(
-      `linecheck_demo_tasks_${params.id}`,
-    );
-
-    if (!storedTasks) {
-      return;
-    }
-
-    const parsedTasks = JSON.parse(
-      storedTasks,
-    ) as ChecklistTask[];
-
-    setTasks(parsedTasks);
-
-    setChecklist((currentChecklist) => {
-      if (!currentChecklist) {
-        return currentChecklist;
+      if (sampleChecklist) {
+        setChecklist(sampleChecklist);
+        return;
       }
 
-      return {
-        ...currentChecklist,
-        taskCount: parsedTasks.length,
-      };
-    });
-  } catch (error) {
-    console.error("Unable to load checklist tasks:", error);
-  }
-}, [params.id]);
+      // remaining checklist-loading code...
+    } finally {
+      setIsLoading(false);
+    }
+  }, [params.id]);
 
-/* eslint-enable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    try {
+      const storedTasks = localStorage.getItem(
+        `linecheck_demo_tasks_${params.id}`,
+      );
+
+      if (!storedTasks) {
+        return;
+      }
+
+      const parsedTasks = JSON.parse(storedTasks) as ChecklistTask[];
+
+      setTasks(parsedTasks);
+
+      setChecklist((currentChecklist) => {
+        if (!currentChecklist) {
+          return currentChecklist;
+        }
+
+        return {
+          ...currentChecklist,
+          taskCount: parsedTasks.length,
+        };
+      });
+    } catch (error) {
+      console.error("Unable to load checklist tasks:", error);
+    }
+  }, [params.id]);
+
+  /* eslint-enable react-hooks/set-state-in-effect */
   function handleTaskTypeSelect(taskType: ChecklistTaskType) {
     setSelectedTaskType(taskType);
     setIsTaskPickerOpen(false);
@@ -228,7 +281,11 @@ useEffect(() => {
   }
 
   function handleTaskSave(task: ChecklistTask) {
-    const updatedTasks = [...tasks, task];
+    const updatedTasks = editingTask
+      ? tasks.map((currentTask) =>
+          currentTask.id === task.id ? task : currentTask,
+        )
+      : [...tasks, task];
 
     setTasks(updatedTasks);
 
@@ -251,11 +308,50 @@ useEffect(() => {
 
     setIsTaskEditorOpen(false);
     setSelectedTaskType(null);
+    setEditingTask(null);
+  }
+
+  function handleTaskDelete(taskId: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+
+    setTasks(updatedTasks);
+
+    localStorage.setItem(
+      `linecheck_demo_tasks_${params.id}`,
+      JSON.stringify(updatedTasks),
+    );
+
+    setChecklist((currentChecklist) => {
+      if (!currentChecklist) {
+        return currentChecklist;
+      }
+
+      return {
+        ...currentChecklist,
+        taskCount: updatedTasks.length,
+        updatedAt: "Just now",
+      };
+    });
+  }
+
+  function handleTaskEdit(task: ChecklistTask) {
+    setEditingTask(task);
+    setSelectedTaskType(task.type);
+    setIsTaskEditorOpen(true);
   }
 
   function handleTaskEditorClose() {
     setIsTaskEditorOpen(false);
     setSelectedTaskType(null);
+    setEditingTask(null);
   }
 
   if (isLoading) {
@@ -347,10 +443,17 @@ useEffect(() => {
           </p>
         </div>
 
-        <Button type="button" onClick={() => setIsTaskPickerOpen(true)}>
-          <Plus />
-          Add task
-        </Button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+
+          <Button
+            type="button"
+            className="w-full sm:w-auto"
+            onClick={() => setIsTaskPickerOpen(true)}
+          >
+            <Plus />
+            Add task
+          </Button>
+        </div>
       </header>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -396,7 +499,11 @@ useEffect(() => {
           {tasks.length === 0 ? (
             <EmptyTaskState onAddTask={() => setIsTaskPickerOpen(true)} />
           ) : (
-            <TaskList tasks={tasks} />
+            <TaskList
+              tasks={tasks}
+              onEdit={handleTaskEdit}
+              onDelete={handleTaskDelete}
+            />
           )}
         </CardContent>
       </Card>
@@ -412,6 +519,7 @@ useEffect(() => {
         checklistId={params.id}
         taskType={selectedTaskType}
         position={tasks.length}
+        existingTask={editingTask}
         onClose={handleTaskEditorClose}
         onSave={handleTaskSave}
       />
@@ -445,52 +553,119 @@ function InfoCard({ icon: Icon, label, value }: InfoCardProps) {
 
 type TaskListProps = {
   tasks: ChecklistTask[];
+  onEdit: (task: ChecklistTask) => void;
+  onDelete: (taskId: string) => void;
 };
 
-function TaskList({ tasks }: TaskListProps) {
+function TaskList({ tasks, onEdit, onDelete }: TaskListProps) {
   return (
     <div className="space-y-3">
-      {tasks.map((task, index) => (
-        <Card key={task.id}>
-          <CardContent className="flex items-start gap-4 p-4">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-sm font-semibold">
-              {index + 1}
-            </div>
+      {tasks.map((task, index) => {
+        const TaskIcon = getTaskTypeIcon(task.type);
 
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="font-medium">{task.title}</p>
+        const hasRange =
+          task.minimumValue !== undefined || task.maximumValue !== undefined;
 
-                <Badge variant="muted">{formatLabel(task.type)}</Badge>
-
-                {task.required && <Badge variant="outline">Required</Badge>}
+        return (
+          <div
+            key={task.id}
+            className="group rounded-xl border bg-card p-4 transition-colors hover:bg-muted/30"
+          >
+            <div className="flex items-start gap-4">
+              {/* Task icon */}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-muted/50">
+                <TaskIcon className="h-5 w-5 text-muted-foreground" />
               </div>
 
-              {task.instructions && (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {task.instructions}
-                </p>
-              )}
+              {/* Task information */}
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Task {index + 1}
+                  </span>
 
-              {(task.minimumValue !== undefined ||
-                task.maximumValue !== undefined) && (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Accepted range: {task.minimumValue ?? "No minimum"} to{" "}
-                  {task.maximumValue ?? "No maximum"} {task.unit}
-                </p>
-              )}
+                  <Badge variant="outline">{formatLabel(task.type)}</Badge>
 
-              {task.correctiveAction && (
-                <div className="mt-3 rounded-lg border border-warning/30 bg-warning/10 p-3">
-                  <p className="text-xs font-semibold">Corrective action</p>
-
-                  <p className="mt-1 text-sm">{task.correctiveAction}</p>
+                  {task.required && <Badge variant="warning">Required</Badge>}
                 </div>
-              )}
+
+                <h3 className="mt-2 font-semibold text-foreground">
+                  {task.title}
+                </h3>
+
+                {task.instructions && (
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    {task.instructions}
+                  </p>
+                )}
+
+                {/* Minimum / maximum values */}
+                {hasRange && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {task.minimumValue !== undefined && (
+                      <div className="rounded-md bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+                        Min:{" "}
+                        <span className="font-medium text-foreground">
+                          {task.minimumValue}
+                          {task.unit ? ` ${task.unit}` : ""}
+                        </span>
+                      </div>
+                    )}
+
+                    {task.maximumValue !== undefined && (
+                      <div className="rounded-md bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+                        Max:{" "}
+                        <span className="font-medium text-foreground">
+                          {task.maximumValue}
+                          {task.unit ? ` ${task.unit}` : ""}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Corrective action */}
+                {task.correctiveAction && (
+                  <div className="mt-3 flex gap-2 rounded-lg border border-warning/30 bg-warning/5 p-3">
+                    <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+
+                    <div>
+                      <p className="text-xs font-semibold">Corrective action</p>
+
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {task.correctiveAction}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label={`Edit ${task.title}`}
+                title="Edit task"
+                onClick={() => onEdit(task)}
+              >
+                <Pencil />
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="text-destructive hover:text-destructive"
+                aria-label={`Delete ${task.title}`}
+                title="Delete task"
+                onClick={() => onDelete(task.id)}
+              >
+                <Trash2 />
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

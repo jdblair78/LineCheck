@@ -25,6 +25,7 @@ type TaskEditorProps = {
   checklistId: string;
   taskType: ChecklistTaskType | null;
   position: number;
+  existingTask?: ChecklistTask | null;
   onClose: unknown;
   onSave: unknown;
 };
@@ -36,27 +37,42 @@ export function TaskEditor(props: TaskEditorProps) {
     return null;
   }
 
-  return <TaskEditorContent key={taskType} {...props} />;
+  return (
+    <TaskEditorContent key={props.existingTask?.id ?? taskType} {...props} />
+  );
 }
 
 function TaskEditorContent({
   checklistId,
   taskType,
   position,
+  existingTask,
   onClose,
   onSave,
 }: TaskEditorProps) {
-  const [title, setTitle] = useState("");
-  const [instructions, setInstructions] = useState("");
-  const [required, setRequired] = useState(true);
-
-  const [minimumValue, setMinimumValue] = useState("");
-  const [maximumValue, setMaximumValue] = useState("");
-  const [unit, setUnit] = useState("");
-
-  const [correctiveAction, setCorrectiveAction] = useState("");
+  const [title, setTitle] = useState(existingTask?.title ?? "");
 
   const [titleError, setTitleError] = useState("");
+
+  const [instructions, setInstructions] = useState(
+    existingTask?.instructions ?? "",
+  );
+
+  const [required, setRequired] = useState(existingTask?.required ?? true);
+
+  const [minimumValue, setMinimumValue] = useState(
+    existingTask?.minimumValue?.toString() ?? "",
+  );
+
+  const [maximumValue, setMaximumValue] = useState(
+    existingTask?.maximumValue?.toString() ?? "",
+  );
+
+  const [unit, setUnit] = useState(existingTask?.unit ?? "");
+
+  const [correctiveAction, setCorrectiveAction] = useState(
+    existingTask?.correctiveAction ?? "",
+  );
 
   const activeTaskType = taskType as ChecklistTaskType;
   const taskTypeOption = checklistTaskTypes.find(
@@ -90,20 +106,19 @@ function TaskEditorContent({
     }
 
     const task: ChecklistTask = {
-      id: crypto.randomUUID(),
+      id: existingTask?.id ?? crypto.randomUUID(),
       checklistId,
       type: activeTaskType,
       title: title.trim(),
       instructions: instructions.trim(),
       required,
-      position,
-      createdAt: new Date().toISOString(),
+      position: existingTask?.position ?? position,
+      createdAt: existingTask?.createdAt ?? new Date().toISOString(),
       minimumValue: parseOptionalNumber(minimumValue),
       maximumValue: parseOptionalNumber(maximumValue),
       unit: unit.trim() || undefined,
       correctiveAction: correctiveAction.trim() || undefined,
     };
-
     handleSave(task);
   }
   return (
@@ -133,7 +148,10 @@ function TaskEditorContent({
                   id="task-editor-title"
                   className="text-xl font-semibold tracking-tight"
                 >
-                  Add {taskTypeOption?.title}
+                  Add{" "}
+                  {existingTask
+                    ? `Edit ${taskTypeOption?.title}`
+                    : `Add ${taskTypeOption?.title}`}
                 </h2>
 
                 <Badge variant="muted">{taskTypeOption?.title}</Badge>
@@ -268,7 +286,9 @@ function TaskEditorContent({
               Cancel
             </Button>
 
-            <Button type="submit">Save task</Button>
+            <Button type="submit">
+              {existingTask ? "Save changes" : "Save task"}
+            </Button>
           </footer>
         </form>
       </div>
