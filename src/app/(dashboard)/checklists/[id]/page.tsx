@@ -225,24 +225,6 @@ export default function ChecklistDetailPage() {
 
   /* eslint-disable react-hooks/set-state-in-effect */
 
-  useEffect(() => {
-    try {
-      const checklistId = params.id;
-
-      const sampleChecklist = sampleChecklists.find(
-        (item) => item.id === checklistId,
-      );
-
-      if (sampleChecklist) {
-        setChecklist(sampleChecklist);
-        return;
-      }
-
-      // remaining checklist-loading code...
-    } finally {
-      setIsLoading(false);
-    }
-  }, [params.id]);
 
   useEffect(() => {
     try {
@@ -275,6 +257,7 @@ export default function ChecklistDetailPage() {
 
   /* eslint-enable react-hooks/set-state-in-effect */
   function handleTaskTypeSelect(taskType: ChecklistTaskType) {
+    setEditingTask(null);
     setSelectedTaskType(taskType);
     setIsTaskPickerOpen(false);
     setIsTaskEditorOpen(true);
